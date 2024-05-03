@@ -1,0 +1,35 @@
+{
+    "configurations": [
+        {
+            "name": "HE",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "CORE_M55_HE",
+                "EI_CONFIG_ETHOS_U55_128",
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+
+            "compileCommands": "${workspaceFolder}/out/firmware-alif/HE/debug/compile_commands.json"
+        },
+        {
+            "name": "HP",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "CORE_M55_HP",
+                "EI_CONFIG_ETHOS_U55_256",
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+
+            "compileCommands": "${workspaceFolder}/out/firmware-alif/HP/debug/compile_commands.json"
+        }
+    ],
+    "version": 4
+}

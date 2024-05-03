@@ -1,0 +1,35 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Alif Ensemble Debug",
+            "cwd": "${workspaceFolder}",
+            "executable": "./out/firmware-alif/${command:cpptools.activeConfigName}/debug/firmware-alif-${command:cpptools.activeConfigName}.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "runToEntryPoint": "main",
+            "servertype": "jlink",
+            "showDevDebugOutput": "parsed",
+            "device": "AE722F80F55D5_${command:cpptools.activeConfigName}",
+            "interface": "jtag",
+            "preLaunchCommands": [
+                "monitor speed 15000"
+            ],
+            "jlinkscript": ".alif/m55-${command:cpptools.activeConfigName}_setup.jlinkscript"
+        }    
+    ],
+    "inputs": [
+        {
+            "id": "core",
+            "type": "command",
+            "command": "cpptools.activeConfigCustomVariable",
+            "args": "core"
+        },
+        {
+            "id": "device",
+            "type": "command",
+            "command": "cpptools.activeConfigCustomVariable",
+            "args": "device"
+        }
+    ]
+}

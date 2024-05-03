@@ -1,0 +1,33 @@
+{
+    "files.associations": {
+        "*.h": "c",
+    },
+
+    "cmake.configureOnOpen": false,
+
+    "cortex-debug.variableUseNaturalFormat": false,
+    "cmsis-csolution.actions": [
+        {
+            "path": "firmware-alif.csolution.yaml",
+            "target": "HE",
+            "config": {
+                "debug": "Alif Ensemble Debug"
+            },
+            "projects": [
+                {
+                    "path": "firmware-alif.cproject.yaml",
+                    "config": {
+                        "debug": "Alif Ensemble Debug"
+                    }
+                }
+            ]
+        },
+        {
+            "path": "firmware-alif.csolution.yaml",
+            "target": "HP",
+            "config": {
+                "debug": "Alif Ensemble Debug"
+            }
+        }
+    ],
+}

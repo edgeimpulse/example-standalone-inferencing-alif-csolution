@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/tools/projmgr/2.3.0/tools/projmgr/schemas/csolution.schema.json
+solution:
+  created-for: cmsis-toolbox@2.3.0
+  cdefault:
+  
+  target-types:
+    - device: Alif Semiconductor::AE722F80F55D5LS:M55_HE
+      type: HE
+      compiler: GCC
+      #debug: "on"
+      define:
+        - "CORE_M55_HE"
+        - "EI_CONFIG_ETHOS_U55_128"
+    - device: Alif Semiconductor::AE722F80F55D5LS:M55_HP
+      type: HP
+      compiler: GCC
+      #debug: "on"
+      define:
+        - "CORE_M55_HP"
+        - "EI_CONFIG_ETHOS_U55_256"
+  define:
+    - UNICODE
+    - _UNICODE
+    #- _DEBUG
+    
+  build-types:
+    - type: debug
+      optimize: speed
+      debug: on
+      define:
+        - _DEBUG
+    #- type: release
+    #  optimize: speed
+    #  debug: off
+
+  packs:
+    - pack: AlifSemiconductor::Ensemble@1.1.1
+    - pack: ARM::CMSIS@5.9.0
+    - pack: ARM::CMSIS-DSP@1.11.0
+    - pack: ARM::CMSIS-NN@4.0.0
+    - pack: EdgeImpulse::EI-SDK@1.49.9
+  projects:
+    - project: firmware-alif.cproject.yaml
