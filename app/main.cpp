@@ -18,6 +18,7 @@
 #include CMSIS_device_header
 #include <stdio.h>
 #include "peripheral/peripheral.h"
+#include "npu/npu_handler.h"
 #include "ei_run_classifier.h"
 #include "edge-impulse-sdk/porting/ei_classifier_porting.h"
 #include "model-parameters/model_metadata.h"
@@ -36,8 +37,8 @@ int raw_feature_get_data(size_t offset, size_t length, float *out_ptr)
 int main (void)
 {
     ei_impulse_result_t result = {nullptr};
-
     peripheral_init();
+    npu_init();
 
     ei_printf("Edge Impulse standalone inferencing (Alif csolution)\n");
 

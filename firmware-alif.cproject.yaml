@@ -13,6 +13,11 @@ project:
         - file: app/peripheral/uart.c
         - file: app/peripheral/timer.c
         - file: libs/board/appkit_gen2/board_init.c
+    - group: Npu
+      files:
+      - file: app/npu/npu_handler.cpp
+      - file: app/npu/ethosu_cpu_cache.c
+      - file: app/npu/ethosu_platform_callbacks.c
 
   linker:
     - script: link-scripts/gcc_M55_HE.ld
@@ -29,6 +34,7 @@ project:
 
   define:
     - define BOARD_ALIF_DEVKIT_VARIANT: 5
+    - ETHOSU55
 
   components:
     # needed for Alif Ensemble support
@@ -37,6 +43,7 @@ project:
     - component: ARM::CMSIS:DSP
     - component: EdgeImpulse::EdgeImpulse:SDK
     - component: ARM::CMSIS:NN Lib@4.0.0
+    - component: Arm::Machine Learning:NPU Support:Ethos-U Driver&Generic U55
 
     # peripheral drivers & middleware, uncomment as needed
     # - component: AlifSemiconductor::Device:SOC Peripherals:ADC

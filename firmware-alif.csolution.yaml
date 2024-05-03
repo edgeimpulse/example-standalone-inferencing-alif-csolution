@@ -38,6 +38,8 @@ solution:
     - pack: ARM::CMSIS@5.9.0
     - pack: ARM::CMSIS-DSP@1.11.0
     - pack: ARM::CMSIS-NN@4.0.0
+    - pack: Arm::ethos-u-core-driver@1.23.2
+    - pack: ARM::ml-embedded-eval-kit-uc-api@22.8.0-Beta
     - pack: EdgeImpulse::EI-SDK@1.49.9
   projects:
     - project: firmware-alif.cproject.yaml

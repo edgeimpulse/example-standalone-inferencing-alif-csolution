@@ -10,7 +10,8 @@
                 "EI_CONFIG_ETHOS_U55_128",
                 "_DEBUG",
                 "UNICODE",
-                "_UNICODE"
+                "_UNICODE",
+                "ETHOSU55"
             ],
 
             "compileCommands": "${workspaceFolder}/out/firmware-alif/HE/debug/compile_commands.json"
@@ -25,7 +26,8 @@
                 "EI_CONFIG_ETHOS_U55_256",
                 "_DEBUG",
                 "UNICODE",
-                "_UNICODE"
+                "_UNICODE",
+                "ETHOSU55"
             ],
 
             "compileCommands": "${workspaceFolder}/out/firmware-alif/HP/debug/compile_commands.json"
