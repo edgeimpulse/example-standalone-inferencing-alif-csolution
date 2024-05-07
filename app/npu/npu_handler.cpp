@@ -22,6 +22,7 @@
 #include "edge-impulse-sdk/porting/ei_classifier_porting.h"
 
 static struct ethosu_driver npuDriver;
+
 static void npu_irq_handler(void)
 {
     ethosu_irq_handler(&npuDriver);
@@ -30,6 +31,8 @@ static void npu_irq_handler(void)
 
 int npu_init(void)
 {
+    int err = 0;
+
     /* Base address is 0x4000E1000; interrupt number is 55. */
     void* const npuBaseAddr = reinterpret_cast<void*>(LOCAL_NPU_BASE);
 
@@ -47,6 +50,14 @@ int npu_init(void)
     NVIC_SetVector(LOCAL_NPU_IRQ_IRQn, (uint32_t) &npu_irq_handler);
     NVIC_EnableIRQ(LOCAL_NPU_IRQ_IRQn);
 
+    /* Get Ethos-U version */
+    struct ethosu_version version;
+
+    if (0 != (err = ethosu_get_version(&npuDriver, &version))) {
+        ei_printf("failed to fetch Ethos-U version ei_printf\n");
+        return err;
+    }
+    
     return 0;
 }
 

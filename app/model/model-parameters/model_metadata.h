@@ -61,7 +61,7 @@
 #define EI_CLASSIFIER_PROJECT_ID                 14227
 #define EI_CLASSIFIER_PROJECT_OWNER              "Edge Impulse Inc."
 #define EI_CLASSIFIER_PROJECT_NAME               "Tutorial: Adding sight to your sensors"
-#define EI_CLASSIFIER_PROJECT_DEPLOY_VERSION     69
+#define EI_CLASSIFIER_PROJECT_DEPLOY_VERSION     71
 #define EI_CLASSIFIER_NN_INPUT_FRAME_SIZE        27648
 #define EI_CLASSIFIER_RAW_SAMPLE_COUNT           9216
 #define EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME      1

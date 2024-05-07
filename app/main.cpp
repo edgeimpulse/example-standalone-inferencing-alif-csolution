@@ -22,6 +22,7 @@
 #include "ei_run_classifier.h"
 #include "edge-impulse-sdk/porting/ei_classifier_porting.h"
 #include "model-parameters/model_metadata.h"
+#include "board.h"
 
 static const float features[] = { 
         // copy raw features here (for example from the 'Live classification' page)
@@ -37,8 +38,15 @@ int raw_feature_get_data(size_t offset, size_t length, float *out_ptr)
 int main (void)
 {
     ei_impulse_result_t result = {nullptr};
+
     peripheral_init();
-    npu_init();
+    if (npu_init()) {
+        BOARD_LED1_Control(BOARD_LED_STATE_TOGGLE);
+        BOARD_LED2_Control(BOARD_LED_STATE_TOGGLE);
+        ei_sleep(1000);
+    }
+
+    cpu_cache_enable();
 
     ei_printf("Edge Impulse standalone inferencing (Alif csolution)\n");
 

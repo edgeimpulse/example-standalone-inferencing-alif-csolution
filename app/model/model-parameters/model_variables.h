@@ -112,7 +112,7 @@ const ei_impulse_t impulse_14227_0 = {
     .project_id = 14227,
     .project_owner = "Edge Impulse Inc.",
     .project_name = "Tutorial: Adding sight to your sensors",
-    .deploy_version = 69,
+    .deploy_version = 71,
 
     .nn_input_frame_size = 27648,
     .raw_sample_count = 9216,
