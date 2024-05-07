@@ -58,10 +58,10 @@
 #define EI_CLASSIFIER_DATATYPE_UINT8             3
 #define EI_CLASSIFIER_DATATYPE_INT8              9
 
-#define EI_CLASSIFIER_PROJECT_ID                 14227
-#define EI_CLASSIFIER_PROJECT_OWNER              "Edge Impulse Inc."
-#define EI_CLASSIFIER_PROJECT_NAME               "Tutorial: Adding sight to your sensors"
-#define EI_CLASSIFIER_PROJECT_DEPLOY_VERSION     71
+#define EI_CLASSIFIER_PROJECT_ID                 151368
+#define EI_CLASSIFIER_PROJECT_OWNER              "Francesco"
+#define EI_CLASSIFIER_PROJECT_NAME               "Face detection - FOMO (96x96)"
+#define EI_CLASSIFIER_PROJECT_DEPLOY_VERSION     120
 #define EI_CLASSIFIER_NN_INPUT_FRAME_SIZE        27648
 #define EI_CLASSIFIER_RAW_SAMPLE_COUNT           9216
 #define EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME      1
@@ -69,19 +69,24 @@
 #define EI_CLASSIFIER_INPUT_WIDTH                96
 #define EI_CLASSIFIER_INPUT_HEIGHT               96
 #define EI_CLASSIFIER_INPUT_FRAMES               1
-#define EI_CLASSIFIER_NN_OUTPUT_COUNT            3
+#define EI_CLASSIFIER_NN_OUTPUT_COUNT            288
 #define EI_CLASSIFIER_INTERVAL_MS                1
-#define EI_CLASSIFIER_LABEL_COUNT                3
+#define EI_CLASSIFIER_LABEL_COUNT                1
 #define EI_CLASSIFIER_HAS_ANOMALY                EI_ANOMALY_TYPE_UNKNOWN
 #define EI_CLASSIFIER_HAS_VISUAL_ANOMALY         0
 #define EI_CLASSIFIER_SINGLE_FEATURE_INPUT       1
 #define EI_CLASSIFIER_FREQUENCY                  0
 #define EI_CLASSIFIER_HAS_MODEL_VARIABLES        1
-#define EI_CLASSIFIER_THRESHOLD                  0.6
 
-#define EI_CLASSIFIER_OBJECT_DETECTION             0
+
+#define EI_CLASSIFIER_OBJECT_DETECTION             1
+#define EI_CLASSIFIER_OBJECT_DETECTION_LAST_LAYER  EI_CLASSIFIER_LAST_LAYER_FOMO
+#warning 'EI_CLASSFIER_OBJECT_DETECTION_COUNT' is used for the guaranteed minimum number of objects detected. To get all objects during inference use 'bounding_boxes_count' from the 'ei_impulse_result_t' struct instead.
+#define EI_CLASSIFIER_OBJECT_DETECTION_COUNT       10
+#define EI_CLASSIFIER_OBJECT_DETECTION_THRESHOLD   0.5
 #define EI_CLASSIFIER_TFLITE_OUTPUT_DATA_TENSOR    0
-#define EI_CLASSIFIER_OBJECT_DETECTION_LAST_LAYER  EI_CLASSIFIER_LAST_LAYER_UNKNOWN
+#define EI_CLASSIFIER_TFLITE_OUTPUT_LABELS_TENSOR  1
+#define EI_CLASSIFIER_TFLITE_OUTPUT_SCORE_TENSOR   2
 
 #define EI_CLASSIFIER_TFLITE_INPUT_DATATYPE         EI_CLASSIFIER_DATATYPE_INT8
 #define EI_CLASSIFIER_TFLITE_OUTPUT_DATATYPE        EI_CLASSIFIER_DATATYPE_INT8
@@ -92,7 +97,7 @@
 #define EI_CLASSIFIER_QUANTIZATION_ENABLED          1
 
 #define EI_CLASSIFIER_COMPILED                      1
-#define EI_CLASSIFIER_HAS_TFLITE_OPS_RESOLVER       1
+#define EI_CLASSIFIER_HAS_TFLITE_OPS_RESOLVER       0
 
 #define EI_CLASSIFIER_LOAD_IMAGE_SCALING         0
 
@@ -121,7 +126,7 @@
 
 #define EI_STUDIO_VERSION_MAJOR             1
 #define EI_STUDIO_VERSION_MINOR             49
-#define EI_STUDIO_VERSION_PATCH             21
+#define EI_STUDIO_VERSION_PATCH             23
 
 #define EI_CLASSIFIER_HR_ENABLED            0
 

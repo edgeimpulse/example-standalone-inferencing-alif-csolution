@@ -25,16 +25,16 @@
 #include <stdint.h>
 #include "model_metadata.h"
 
-#include "tflite-model/tflite_learn_19_compiled.h"
+#include "tflite-model/tflite_learn_23_compiled.h"
 #include "edge-impulse-sdk/classifier/ei_model_types.h"
 #include "edge-impulse-sdk/classifier/inferencing_engines/engines.h"
 
-const char* ei_classifier_inferencing_categories[] = { "lamp", "plant", "unknown" };
+const char* ei_classifier_inferencing_categories[] = { "face" };
 
-uint8_t ei_dsp_config_31_axes[] = { 0 };
-const uint32_t ei_dsp_config_31_axes_size = 1;
-ei_dsp_config_image_t ei_dsp_config_31 = {
-    31, // uint32_t blockId
+uint8_t ei_dsp_config_17_axes[] = { 0 };
+const uint32_t ei_dsp_config_17_axes_size = 1;
+ei_dsp_config_image_t ei_dsp_config_17 = {
+    17, // uint32_t blockId
     1, // int implementationVersion
     1, // int length of axes
     NULL, // named axes
@@ -44,54 +44,54 @@ ei_dsp_config_image_t ei_dsp_config_31 = {
 
 const size_t ei_dsp_blocks_size = 1;
 ei_model_dsp_t ei_dsp_blocks[ei_dsp_blocks_size] = {
-    { // DSP block 31
-        31,
+    { // DSP block 17
+        17,
         27648, // output size
         &extract_image_features, // DSP function pointer
-        (void*)&ei_dsp_config_31, // pointer to config struct
-        ei_dsp_config_31_axes, // array of offsets into the input stream, one for each axis
-        ei_dsp_config_31_axes_size, // number of axes
+        (void*)&ei_dsp_config_17, // pointer to config struct
+        ei_dsp_config_17_axes, // array of offsets into the input stream, one for each axis
+        ei_dsp_config_17_axes_size, // number of axes
         1, // version
         nullptr, // factory function
     }
 };
-const ei_config_tflite_eon_graph_t ei_config_tflite_graph_19 = {
+const ei_config_tflite_eon_graph_t ei_config_tflite_graph_23 = {
     .implementation_version = 1,
-    .model_init = &tflite_learn_19_init,
-    .model_invoke = &tflite_learn_19_invoke,
-    .model_reset = &tflite_learn_19_reset,
-    .model_input = &tflite_learn_19_input,
-    .model_output = &tflite_learn_19_output,
+    .model_init = &tflite_learn_23_init,
+    .model_invoke = &tflite_learn_23_invoke,
+    .model_reset = &tflite_learn_23_reset,
+    .model_input = &tflite_learn_23_input,
+    .model_output = &tflite_learn_23_output,
 };
 
-const ei_learning_block_config_tflite_graph_t ei_learning_block_config_19 = {
+const ei_learning_block_config_tflite_graph_t ei_learning_block_config_23 = {
     .implementation_version = 1,
-    .classification_mode = EI_CLASSIFIER_CLASSIFICATION_MODE_CLASSIFICATION,
-    .block_id = 19,
-    .object_detection = 0,
-    .object_detection_last_layer = EI_CLASSIFIER_LAST_LAYER_UNKNOWN,
+    .classification_mode = EI_CLASSIFIER_CLASSIFICATION_MODE_OBJECT_DETECTION,
+    .block_id = 23,
+    .object_detection = 1,
+    .object_detection_last_layer = EI_CLASSIFIER_LAST_LAYER_FOMO,
     .output_data_tensor = 0,
     .output_labels_tensor = 1,
     .output_score_tensor = 2,
-    .threshold = 0,
+    .threshold = 0.5,
     .quantized = 1,
     .compiled = 1,
-    .graph_config = (void*)&ei_config_tflite_graph_19
+    .graph_config = (void*)&ei_config_tflite_graph_23
 };
 
 const size_t ei_learning_blocks_size = 1;
-const uint32_t ei_learning_block_19_inputs[1] = { 31 };
-const uint32_t ei_learning_block_19_inputs_size = 1;
+const uint32_t ei_learning_block_23_inputs[1] = { 17 };
+const uint32_t ei_learning_block_23_inputs_size = 1;
 const ei_learning_block_t ei_learning_blocks[ei_learning_blocks_size] = {
     {
-        19,
+        23,
         false,
         &run_nn_inference,
-        (void*)&ei_learning_block_config_19,
+        (void*)&ei_learning_block_config_23,
         EI_CLASSIFIER_IMAGE_SCALING_NONE,
-        ei_learning_block_19_inputs,
-        ei_learning_block_19_inputs_size,
-        3
+        ei_learning_block_23_inputs,
+        ei_learning_block_23_inputs_size,
+        288
     },
 };
 
@@ -108,11 +108,11 @@ const ei_object_detection_nms_config_t ei_object_detection_nms = {
     0.2f  /* NMS IOU threshold */
 };
 
-const ei_impulse_t impulse_14227_0 = {
-    .project_id = 14227,
-    .project_owner = "Edge Impulse Inc.",
-    .project_name = "Tutorial: Adding sight to your sensors",
-    .deploy_version = 71,
+const ei_impulse_t impulse_151368_0 = {
+    .project_id = 151368,
+    .project_owner = "Francesco",
+    .project_name = "Face detection - FOMO (96x96)",
+    .deploy_version = 120,
 
     .nn_input_frame_size = 27648,
     .raw_sample_count = 9216,
@@ -126,10 +126,10 @@ const ei_impulse_t impulse_14227_0 = {
     .dsp_blocks_size = ei_dsp_blocks_size,
     .dsp_blocks = ei_dsp_blocks,
     
-    .object_detection_count = 0,
-    .fomo_output_size = 0,
+    .object_detection_count = 10,
+    .fomo_output_size = 12,
     
-    .tflite_output_features_count = 3,
+    .tflite_output_features_count = 288,
     .learning_blocks_size = ei_learning_blocks_size,
     .learning_blocks = ei_learning_blocks,
 
@@ -141,13 +141,13 @@ const ei_impulse_t impulse_14227_0 = {
     .slices_per_model_window = 4,
 
     .has_anomaly = EI_ANOMALY_TYPE_UNKNOWN,
-    .label_count = 3,
+    .label_count = 1,
     .calibration = ei_calibration,
     .categories = ei_classifier_inferencing_categories,
     .object_detection_nms = ei_object_detection_nms
 };
 
-ei_impulse_handle_t impulse_handle_14227_0 = ei_impulse_handle_t( &impulse_14227_0 );
-ei_impulse_handle_t& ei_default_impulse = impulse_handle_14227_0;
+ei_impulse_handle_t impulse_handle_151368_0 = ei_impulse_handle_t( &impulse_151368_0 );
+ei_impulse_handle_t& ei_default_impulse = impulse_handle_151368_0;
 
 #endif // _EI_CLASSIFIER_MODEL_METADATA_H_

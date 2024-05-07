@@ -5,7 +5,7 @@ project:
       files:
         - file: app/main.cpp
         - file: app/ei_classifier_porting.cpp
-        - file: app/model/tflite-model/tflite_learn_19_compiled.cpp
+        - file: app/model/tflite-model/tflite_learn_23_compiled.cpp
 
     - group: Board
       files:
@@ -50,6 +50,7 @@ project:
     - AXI_LIMIT1_MEM_TYPE: 3
     - AXI_LIMIT2_MEM_TYPE: 3
     - AXI_LIMIT3_MEM_TYPE: 3
+    - TF_LITE_STATIC_MEMORY
 
   components:
     # needed for Alif Ensemble support
