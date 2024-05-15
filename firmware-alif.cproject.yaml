@@ -5,7 +5,6 @@ project:
       files:
         - file: app/main.cpp
         - file: app/ei_classifier_porting.cpp
-        - file: app/model/tflite-model/tflite_learn_23_compiled.cpp
 
     - group: Board
       files:
@@ -15,9 +14,9 @@ project:
         - file: libs/board/appkit_gen2/board_init.c
     - group: Npu
       files:
-      - file: app/npu/npu_handler.cpp
-      - file: app/npu/ethosu_cpu_cache.c
-      - file: app/npu/ethosu_platform_callbacks.c
+        - file: app/npu/npu_handler.cpp
+        - file: app/npu/ethosu_cpu_cache.c
+        - file: app/npu/ethosu_platform_callbacks.c
 
   linker:
     - script: link-scripts/gcc_M55_HE.ld
@@ -29,7 +28,6 @@ project:
   add-path:
     - ./
     - app/
-    - app/model
     - libs/board/
 
   define:
@@ -56,10 +54,11 @@ project:
     # needed for Alif Ensemble support
     - component: AlifSemiconductor::Device:Startup&C Startup
     - component: ARM::CMSIS:CORE
-    - component: ARM::CMSIS:DSP
-    - component: EdgeImpulse::EdgeImpulse:SDK
+    - component: ARM::CMSIS:DSP&Source@1.11.0
     - component: ARM::CMSIS:NN Lib@4.0.0
-    #- component: Arm::Machine Learning:NPU Support:Ethos-U Driver&Generic U55
+    - component: EdgeImpulse:SDK
+    # Add your model here
+    #- component: EdgeImpulse:model:project_name@x.0.0
 
     # peripheral drivers & middleware, uncomment as needed
     # - component: AlifSemiconductor::Device:SOC Peripherals:ADC
@@ -99,7 +98,6 @@ project:
     - component: AlifSemiconductor::Device:SOC Peripherals:MHU
     - component: AlifSemiconductor::Device:SE runtime Services:core&Source
     - component: AlifSemiconductor::Device:SE runtime Services:Initialization Helper&Source
-
     # - component: AlifSemiconductor::BSP:External peripherals:CAMERA Sensor MT9M114
     # - component: AlifSemiconductor::BSP:External peripherals:CAMERA Sensor ARX3A0
     # - component: AlifSemiconductor::BSP:External peripherals:Ethernet PHY
