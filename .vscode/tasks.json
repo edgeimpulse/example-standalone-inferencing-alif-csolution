@@ -90,22 +90,22 @@
             "type": "shell",
             "windows": {
                 "command": [
-                    "cp ./out/cproject/${command:cpptools.activeConfigName}/cproject.bin $env:SETOOLS_ROOT/build/images/alif-img.bin;",
-                    "cp ./.alif/m55-${command:cpptools.activeConfigName}_cfg.json $env:SETOOLS_ROOT/alif-img.json;",
-                    "pushd $env:SETOOLS_ROOT;",
-                    "./app-gen-toc -f ./build/imagesalif-img.json;",
+                    "cp ./out/firmware-alif/${command:cpptools.activeConfigName}/debug/firmware-alif-${command:cpptools.activeConfigName}.bin $SETOOLS_ROOT/build/images/alif-img.bin;",
+                    "cp ./.alif/m55-${command:cpptools.activeConfigName}_cfg.json $SETOOLS_ROOT/alif-img.json;",
+                    "pushd $SETOOLS_ROOT;",
+                    "./app-gen-toc -f alif-img.json;",
                     "./app-write-mram -p;",
                     "rm ./build/images/alif-img.bin;",
-                    "rm ./build/images/alif-img.json;",
+                    "rm ./alif-img.json;",
                     "popd"
                 ]
             },
             "linux": {
                 "command": [
-                    "cp ./out/cproject/${command:cpptools.activeConfigName}/cproject.bin $SETOOLS_ROOT/build/images/alif-img.bin;",
-                    "cp ./.alif/m55-${command:cpptools.activeConfigName}_cfg.json $SETOOLS_ROOT/build/config/alif-img.json;",
+                    "cp ./out/firmware-alif/${command:cpptools.activeConfigName}/debug/firmware-alif-${command:cpptools.activeConfigName}.bin $SETOOLS_ROOT/build/images/alif-img.bin;",
+                    "cp ./.alif/m55-${command:cpptools.activeConfigName}_cfg.json $SETOOLS_ROOT/alif-img.json;",
                     "pushd $SETOOLS_ROOT;",
-                    "./app-gen-toc -f ./build/images/alif-img.json;",
+                    "./app-gen-toc -f alif-img.json;",
                     "./app-write-mram -p;",
                     "rm ./build/images/alif-img.bin;",
                     "rm ./alif-img.json;",
@@ -131,9 +131,9 @@
             "type": "shell",
             "windows": {
                 "command": [
-                    "cp ./out/cproject/${command:cpptools.activeConfigName}/cproject.bin $env:SETOOLS_ROOT/build/images/alif-img.bin;",
-                    "cp ./.alif/m55-${command:cpptools.activeConfigName}_cfg.json $env:SETOOLS_ROOT/alif-img.json;",
-                    "pushd $env:SETOOLS_ROOT;",
+                    "cp ./out/cproject/${command:cpptools.activeConfigName}/cproject.bin $SETOOLS_ROOT/build/images/alif-img.bin;",
+                    "cp ./.alif/m55-${command:cpptools.activeConfigName}_cfg.json $SETOOLS_ROOT/alif-img.json;",
+                    "pushd $SETOOLS_ROOT;",
                     "./app-gen-toc -f alif-img.json;",
                     "./app-write-mram -p -d;",
                     "rm ./build/images/alif-img.bin;",

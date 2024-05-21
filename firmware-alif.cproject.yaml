@@ -58,7 +58,7 @@ project:
     - component: ARM::CMSIS:NN Lib@4.0.0
     - component: EdgeImpulse:SDK
     # Add your model here
-    #- component: EdgeImpulse:model:project_name@x.0.0
+    #- component: EdgeImpulse:model:your_project@x.0.0
 
     # peripheral drivers & middleware, uncomment as needed
     # - component: AlifSemiconductor::Device:SOC Peripherals:ADC
