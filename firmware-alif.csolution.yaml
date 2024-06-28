@@ -38,6 +38,7 @@ solution:
     - pack: ARM::CMSIS@5.9.0
     - pack: ARM::CMSIS-DSP@1.11.0
     - pack: ARM::CMSIS-NN@4.0.0
-    - pack: EdgeImpulse
+    - pack: EdgeImpulse::EI-SDK
+
   projects:
     - project: firmware-alif.cproject.yaml

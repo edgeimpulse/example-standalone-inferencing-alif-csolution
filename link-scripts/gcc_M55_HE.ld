@@ -27,16 +27,15 @@
  * limitations under the License.
  */
 
-__STACK_SIZE    = 0x00002000;
-__HEAP_SIZE     = 0x00004000;
-__APP_HEAP_SIZE = 0x00004000;
+__STACK_SIZE    = 0x00008000;
+__HEAP_SIZE     = 0x00010000;
 __ROM_BASE      = 0x80000000;
 __ROM_SIZE      = 0x0057F000;
 
 MEMORY
 {
   ITCM  (rwx) : ORIGIN = 0x00000000, LENGTH = 0x00040000
-  DTCM  (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00040000
+  DTCM  (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00100000
   SRAM0 (rwx) : ORIGIN = 0x02000000, LENGTH = 0x00400000
   SRAM1 (rwx) : ORIGIN = 0x08000000, LENGTH = 0x00280000
   MRAM  (rx)  : ORIGIN = __ROM_BASE, LENGTH = __ROM_SIZE
@@ -54,8 +53,19 @@ SECTIONS
     *system_M55.c.obj(.text .rodata*)
     *mpu_M55.c.obj(.text .rodata*)
     *system_utils.c.obj(.text .rodata*)
+    *pm*(.text .rodata*)
+    *tgu_*(.text .rodata*)
+
+    *peripheral.c.obj(.text .rodata*)
+    *ei_at_handlers.cpp.obj(.text .rodata*)
+    *ei_device_alif_e7.cpp.obj(.text .rodata*)
 
     *lv_*.c.obj(.text .rodata*)
+
+    *libg.a:*printf*(.text* .rodata*)
+    *libstdc++.a:cp-demangle.o(.text* .rodata*)
+    *CMSIS*.obj(.text .rodata*)
+    *flatbuffer*.obj(.text .rodata*)
 
     *(startup_ro_data)
   } > MRAM
@@ -84,6 +94,11 @@ SECTIONS
     __zero_table_end__ = .;
   } > MRAM
 
+  .vectors.itcm (NOLOAD) : ALIGN(2048)
+  {
+    *(.bss.noinit.ram_vectors)
+  } > ITCM
+
   .code.at_itcm : ALIGN(8)
   {
     *(.text*)    
@@ -91,6 +106,7 @@ SECTIONS
 
   .data.at_dtcm : ALIGN(8)
   {
+    /* DTCM has all read-write data, including NPU activation buffer and audio processing buffers */
     *(vtable)
     *(.data)
     *(.data*)
@@ -113,11 +129,15 @@ SECTIONS
     * (.bss.lcd_frame_buf)                 /* LCD frame Buffer. */
   } > SRAM0
 
-  .bss.at_sram1 (NOLOAD) :
+  .bss.at_sram1 (NOLOAD) : ALIGN(8)
   {
     * (.bss.camera_frame_buf)              /* Camer Frame Buffer */
     * (.bss.camera_frame_bayer_to_rgb_buf) /* (Optional) Camera Frame Buffer for Bayer to RGB Conversion. */
   } > SRAM1
+
+  .bss.itcm (NOLOAD) : ALIGN(8)
+  {
+  } > ITCM
 
   .bss (NOLOAD) : ALIGN(8)
   {
@@ -129,14 +149,6 @@ SECTIONS
     . = ALIGN(8);
     __bss_end__ = .;
   } > DTCM
-
-  .__app_heap :
-  {
-     . = ALIGN(8);
-     __RAM_segment_used_end__ = .;
-     . = . + __APP_HEAP_SIZE;
-     . = ALIGN(8);
-   } >DTCM
 
   .heap (NOLOAD) : ALIGN(8)
   {

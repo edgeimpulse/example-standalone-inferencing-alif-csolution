@@ -7,6 +7,8 @@ if [ -z "$SETOOLS_ROOT" ]; then
     exit 1
 fi
 
+TARGET=$1
+
 if [ -z "$TARGET" ]; then
     TARGET="HP"
 fi

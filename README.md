@@ -77,27 +77,4 @@ Connect the 20pin cable of JLink to J13 and press F5.
 
 
 ## Update model
-
-### Prerequisites
-To add your model to your component library you need to use the cpackget utility:
-```sh
-cpackget add <your_model>.pack
-```
-Then you ned to add it to the solution and the project.
-
-### Update component
-
-In [firmware-alif.cproject.yaml](firmware-alif.cproject.yaml), update your model in Components,
-
-ie
-replace
-```
-    # Add your model here
-    #- component: EdgeImpulse:model:project_name@x.0.0
-```
-with
-replace
-```
-    # Add your model here
-    - component: EdgeImpulse:model:Tutorial_Continuous_motion_recog@1.0.0
-```
+To update your model, unizp the CMSIS pack deployment, install the packs using `cpackget add <your_project_name>.pack` and paste the `model.yml` in the `model` folder.

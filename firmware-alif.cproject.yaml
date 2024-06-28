@@ -5,7 +5,6 @@ project:
       files:
         - file: app/main.cpp
         - file: app/ei_classifier_porting.cpp
-
     - group: Board
       files:
         - file: app/peripheral/peripheral.c
@@ -17,7 +16,6 @@ project:
         - file: app/npu/npu_handler.cpp
         - file: app/npu/ethosu_cpu_cache.c
         - file: app/npu/ethosu_platform_callbacks.c
-
   linker:
     - script: link-scripts/gcc_M55_HE.ld
       for-compiler: GCC
@@ -25,6 +23,7 @@ project:
     - script: link-scripts/gcc_M55_HP.ld
       for-compiler: GCC
       for-context: +HP
+      
   add-path:
     - ./
     - app/
@@ -33,6 +32,7 @@ project:
   define:
     - BOARD_ALIF_DEVKIT_VARIANT: 5
     - ETHOSU55
+    - ETHOSU_ARCH: u55
     - EI_ETHOS
     - EI_ALIF_ADDR_TRANSLATION
     - ARM_NPU
@@ -54,11 +54,9 @@ project:
     # needed for Alif Ensemble support
     - component: AlifSemiconductor::Device:Startup&C Startup
     - component: ARM::CMSIS:CORE
-    - component: ARM::CMSIS:DSP&Source@1.11.0
-    - component: ARM::CMSIS:NN Lib@4.0.0
-    - component: EdgeImpulse:SDK
-    # Add your model here
-    #- component: EdgeImpulse:model:your_project@x.0.0
+    - component: ARM::CMSIS:DSP
+    - component: ARM::CMSIS:NN Lib
+    - component: EdgeImpulse::EdgeImpulse:SDK
 
     # peripheral drivers & middleware, uncomment as needed
     # - component: AlifSemiconductor::Device:SOC Peripherals:ADC
@@ -104,6 +102,9 @@ project:
     # - component: AlifSemiconductor::BSP:External peripherals:GT911 Touch Controller
     # - component: AlifSemiconductor::BSP:External peripherals:ILI9806E LCD panel
     # - component: AlifSemiconductor::BSP:External peripherals:OSPI Flash ISSI
+
+  layers:
+    - layer: ./model/model.clayer.yml
 
   output:
     base-name: $Project$-$TargetType$

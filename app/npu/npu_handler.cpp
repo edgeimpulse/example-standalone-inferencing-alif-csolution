@@ -49,14 +49,6 @@ int npu_init(void)
 
     NVIC_SetVector(LOCAL_NPU_IRQ_IRQn, (uint32_t) &npu_irq_handler);
     NVIC_EnableIRQ(LOCAL_NPU_IRQ_IRQn);
-
-    /* Get Ethos-U version */
-    struct ethosu_version version;
-
-    if (0 != (err = ethosu_get_version(&npuDriver, &version))) {
-        ei_printf("failed to fetch Ethos-U version ei_printf\n");
-        return err;
-    }
     
     return 0;
 }
