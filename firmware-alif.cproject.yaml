@@ -22,7 +22,9 @@ project:
       for-context: +HE
     - script: link-scripts/gcc_M55_HP.ld
       for-compiler: GCC
-      for-context: +HP
+      for-context:
+        - +HP
+        - +HP_SRAM
       
   add-path:
     - ./

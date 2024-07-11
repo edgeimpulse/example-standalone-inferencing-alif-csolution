@@ -18,6 +18,15 @@ solution:
       define:
         - "CORE_M55_HP"
         - "EI_CONFIG_ETHOS_U55_256"
+    - device: Alif Semiconductor::AE722F80F55D5LS:M55_HP
+      type: HP_SRAM
+      compiler: GCC
+      #debug: "on"
+      define:
+        - "CORE_M55_HP"
+        - "EI_CONFIG_ETHOS_U55_256"
+        - "EI_CLASSIFIER_ALLOCATION_STATIC"
+        - EI_TENSOR_ARENA_LOCATION: ".tensor_arena_buf"
   define:
     - UNICODE
     - _UNICODE

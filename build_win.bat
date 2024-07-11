@@ -10,7 +10,7 @@ if not defined TARGET SET TARGET="HP"
 
 IF %TARGET% == "clean" goto :CLEAN
 
-if %TARGET% NEQ "HP" and %TARGET% NEQ "HE" goto INVALIDTARGET
+if %TARGET% NEQ "HP" and %TARGET% NEQ "HE" and %TARGET% NEQ "HP_SRAM" goto INVALIDTARGET
 
 echo Building firmware for %TARGET%
 cbuild.exe firmware-alif.csolution.yaml --context-set --update-rte --packs --context firmware-alif.debug+%TARGET%

@@ -127,6 +127,7 @@ SECTIONS
   {
     * (.bss.lcd_crop_and_interpolate_buf)  /* LCD crop and intrepolate image processing buffer. */
     * (.bss.lcd_frame_buf)                 /* LCD frame Buffer. */
+    * (.tensor_arena_buf)
   } > SRAM0
 
   .bss.at_sram1 (NOLOAD) : ALIGN(8)

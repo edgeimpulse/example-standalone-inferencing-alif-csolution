@@ -8,7 +8,7 @@ if [ -z "$TARGET" ]; then
     TARGET="HP"
 fi
 
-if [ "$TARGET" == "HE" ] || [ "$TARGET" == "HP" ]; then
+if [ "$TARGET" == "HE" ] || [ "$TARGET" == "HP" ] || [ "$TARGET" == "HP_SRAM" ]; then
     echo "Building firmware for ${TARGET}"
     cbuild ./firmware-alif.csolution.yaml --context-set --update-rte --packs --context firmware-alif.debug+${TARGET}
 elif [ "$TARGET" == "clean" ]; then

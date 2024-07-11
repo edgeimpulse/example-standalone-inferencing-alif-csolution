@@ -37,6 +37,11 @@ ie to compile HE:
 build.sh HE
 ```
 
+Large models that don't fit into `DTCM` memory can be placed in the `SRAM0` section using the `HP_SRAM` argument:
+```
+sh build.sh HP_SRAM
+```
+
 To clean:
 ```
 build.sh clean
