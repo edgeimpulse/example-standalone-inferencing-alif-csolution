@@ -11,22 +11,21 @@
             "path": "firmware-alif.csolution.yaml",
             "target": "HE",
             "config": {
-                "debug": "Alif Ensemble Debug"
-            },
-            "projects": [
-                {
-                    "path": "firmware-alif.cproject.yaml",
-                    "config": {
-                        "debug": "Alif Ensemble Debug"
-                    }
-                }
-            ]
+                "debug": "Alif Ensemble Debug (Cortex-Debug)"
+            }
         },
         {
             "path": "firmware-alif.csolution.yaml",
             "target": "HP",
             "config": {
-                "debug": "Alif Ensemble Debug"
+                "debug": "Alif Ensemble Debug (Cortex-Debug)"
+            }
+        },
+        {
+            "path": "firmware-alif.csolution.yaml",
+            "target": "HP_SRAM",
+            "config": {
+                "debug": "Alif Ensemble Debug (Cortex-Debug)"
             }
         }
     ],
