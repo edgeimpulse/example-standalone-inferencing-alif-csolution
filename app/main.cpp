@@ -73,45 +73,55 @@ int main (void)
         ei_printf("Predictions (DSP: %ld us., Classification: %ld us., Anomaly: %ld us.): \n",
                     (int32_t)result.timing.dsp_us, (int32_t)result.timing.classification_us, (int32_t)result.timing.anomaly_us);
 
-        // print the predictions
-        ei_printf("[");
-
-#if EI_CLASSIFIER_OBJECT_DETECTION == 1
-        bool bb_found = result.bounding_boxes[0].value > 0;
-        for (size_t ix = 0; ix < EI_CLASSIFIER_OBJECT_DETECTION_COUNT; ix++) {
-            auto bb = result.bounding_boxes[ix];
-            if (bb.value == 0) {
-                continue;
+            // Print the prediction results (object detection)
+        #if EI_CLASSIFIER_OBJECT_DETECTION == 1
+            ei_printf("Object detection bounding boxes:\r\n");
+            for (uint32_t i = 0; i < result.bounding_boxes_count; i++) {
+                ei_impulse_result_bounding_box_t bb = result.bounding_boxes[i];
+                if (bb.value == 0) {
+                    continue;
+                }
+                ei_printf("  %s (%f) [ x: %u, y: %u, width: %u, height: %u ]\r\n",
+                        bb.label,
+                        bb.value,
+                        bb.x,
+                        bb.y,
+                        bb.width,
+                        bb.height);
             }
 
-            ei_printf("    %s (", bb.label);
-            ei_printf_float(bb.value);
-            ei_printf(") [ x: %lu, y: %lu, width: %lu, height: %lu ]\n", bb.x, bb.y, bb.width, bb.height);
-        }
-
-        if (!bb_found) {
-            ei_printf("    No objects found\n");
-        }
-#else
-        for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++) {
-            ei_printf("    %s: ",result.classification[ix].label);
-            ei_printf_float(result.classification[ix].value);
-
-#if EI_CLASSIFIER_HAS_ANOMALY == 1
-            ei_printf(",\n");            
-#else
-            if (ix != EI_CLASSIFIER_LABEL_COUNT - 1) {
-                ei_printf(",\n");                
+            // Print the prediction results (classification)
+        #else
+            ei_printf("Predictions:\r\n");
+            for (uint16_t i = 0; i < EI_CLASSIFIER_LABEL_COUNT; i++) {
+                ei_printf("  %s: ", ei_classifier_inferencing_categories[i]);
+                ei_printf("%.5f\r\n", result.classification[i].value);
             }
-#endif
-        }
-#endif
+        #endif
 
-#if EI_CLASSIFIER_HAS_ANOMALY == 1
-        ei_printf("Anomaly: ");
-        ei_printf_float(result.anomaly);
-#endif
-        ei_printf("]\n");
+            // Print anomaly result (if it exists)
+        #if EI_CLASSIFIER_HAS_ANOMALY
+            ei_printf("Anomaly prediction: %.3f\r\n", result.anomaly);
+        #endif
+
+        #if EI_CLASSIFIER_HAS_VISUAL_ANOMALY
+            ei_printf("Visual anomalies:\r\n");
+            for (uint32_t i = 0; i < result.visual_ad_count; i++) {
+                ei_impulse_result_bounding_box_t bb = result.visual_ad_grid_cells[i];
+                if (bb.value == 0) {
+                    continue;
+                }
+                ei_printf("  %s (%f) [ x: %u, y: %u, width: %u, height: %u ]\r\n",
+                        bb.label,
+                        bb.value,
+                        bb.x,
+                        bb.y,
+                        bb.width,
+                        bb.height);
+            }
+            ei_printf("Visual anomaly values: Mean : %.3f Max : %.3f\r\n",
+            result.visual_ad_result.mean_value, result.visual_ad_result.max_value);
+        #endif
 
         ei_sleep(2000);
     }
