@@ -16,6 +16,12 @@ project:
         - file: app/npu/npu_handler.cpp
         - file: app/npu/ethosu_cpu_cache.c
         - file: app/npu/ethosu_platform_callbacks.c
+    - group: Detect
+      files:
+        - file: app/tflite-model/detect/tflite_learn_6_compiled.cpp
+    - group: Predict
+      files:
+        - file: app/tflite-model/predict/tflite_learn_12_compiled.cpp
   linker:
     - script: link-scripts/gcc_M55_HE.ld
       for-compiler: GCC
@@ -105,8 +111,8 @@ project:
     # - component: AlifSemiconductor::BSP:External peripherals:ILI9806E LCD panel
     # - component: AlifSemiconductor::BSP:External peripherals:OSPI Flash ISSI
 
-  layers:
-    - layer: ./model/model.clayer.yml
+  # layers:
+  #   - layer: ./model/model.clayer.yml
 
   output:
     base-name: $Project$-$TargetType$
