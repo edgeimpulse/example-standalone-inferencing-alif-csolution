@@ -18,7 +18,7 @@ project:
         - file: app/npu/ethosu_platform_callbacks.c
     - group: Detect
       files:
-        - file: app/tflite-model/detect/tflite_learn_6_compiled.cpp
+        - file: app/tflite-model/detect/tflite_learn_3_compiled.cpp
     - group: Predict
       files:
         - file: app/tflite-model/predict/tflite_learn_12_compiled.cpp
