@@ -34,11 +34,11 @@
 #include "board.h"
 
 #include "tflite-model/predict/tflite_learn_12_compiled.h"
-#include "tflite-model/detect/tflite_learn_6_compiled.h"
+#include "tflite-model/detect/tflite_learn_448_compiled.h"
 #include "bitmap_helper.h"
 
-#define ROWS 160
-#define COLS 160
+#define ROWS 224
+#define COLS 224
 #define DETECT_THRESHOLD 0.3
 
 #define PREDICT_ROWS 32
@@ -74,7 +74,7 @@ void floodFill(float arr[ROWS][COLS], int visited[ROWS][COLS], int i, int j, int
 }
 
 void findAllBoxes(float arr[ROWS][COLS], std::vector<ei_detect_box_t> *boxes) {
-    int visited[ROWS][COLS];
+    static int visited[ROWS][COLS];
     memset(visited, 0, sizeof(visited));
 
     for (int i = 0; i < ROWS; i++) {
@@ -89,7 +89,14 @@ void findAllBoxes(float arr[ROWS][COLS], std::vector<ei_detect_box_t> *boxes) {
                 new_box.col_start = startCol;
                 new_box.col_end = endCol;
 
+
+                ei_printf("\n\rstartRow: %i", startRow);
+                ei_printf("\n\rendRow: %i", endRow);
+                ei_printf("\n\rcol_start: %", startCol);
+                ei_printf("\n\rcol_end: %i", endCol);
+
                 size_t area = (new_box.row_end - new_box.row_start) * (new_box.col_end - new_box.col_start);
+                ei_printf("\n\rarea: %i", area);
                 if (area < 10) continue;
 
                 boxes->push_back(new_box);
