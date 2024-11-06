@@ -33,7 +33,7 @@
 // #include "model-parameters/model_metadata.h"
 #include "board.h"
 
-#include "tflite-model/predict/tflite_learn_12_compiled.h"
+#include "tflite-model/predict/tflite_learn_9_compiled.h"
 #include "tflite-model/detect/tflite_learn_3_compiled.h"
 #include "bitmap_helper.h"
 
@@ -314,6 +314,8 @@ int main (void)
             break;
         }
 
+        while(1){}
+
         uint32_t time_detect_end = ei_read_timer_ms();
         
 
@@ -358,18 +360,24 @@ int main (void)
 
             resize_image(cutout, resized_cutout, cutout_cols, cutout_rows, PREDICT_COLS, PREDICT_ROWS);
 
+            float py_zero_point = predict_input.params.zero_point;
+            float py_scale = predict_input.params.scale;
 
-            // different scaling /Users/janjongboom/repos/PaddleOCR-ONNX-Sample/ppocr_onnx/tools/infer/predict_rec.py line 190
-            for (size_t ix = 0; ix < PREDICT_COLS * PREDICT_ROWS; ix++) {
-                uint32_t v = (uint32_t)resized_cutout[ix];
+            ei_printf("Py zero point = %f and scale = %f\n", py_zero_point, py_scale);
 
-                float r = (float)(v >> 16 & 0xff) / 255.0f;
-                float g = (float)(v >> 8 & 0xff) / 255.0f;
-                float b = (float)(v & 0xff) / 255.0f;
-
-                predict_input.data.f[(ix * 3) + 0] = (b - 0.5f) / 0.5f;
-                predict_input.data.f[(ix * 3) + 1] = (g - 0.5f) / 0.5f;
-                predict_input.data.f[(ix * 3) + 2] = (r - 0.5f) / 0.5f;
+            for (size_t ix = 0; ix < PREDICT_COLS * PREDICT_ROWS * 3; ix++){
+                float v = resized_cutout[ix];
+                v = (v - 0.5) / 0.5;
+                int vq = (v / py_scale) + py_zero_point;
+                if (vq < -128)
+                {
+                    vq = -128;
+                }
+                if (vq > 127)
+                {
+                    vq = 127;
+                }
+                predict_input.data.int8[ix] = vq;
             }
 
             ei_free(cutout);
@@ -384,13 +392,13 @@ int main (void)
             float highest_confidence = 0.0f;
             float lowest_confidence = 1.0f;
 
-            for (size_t row = 0; row < 40; row++) {
-                float hi_val = 0.0f;
+            for (size_t row = 0; row < 20; row++) {
+                int hi_val = 0;
                 int hi_ix = -1;
 
                 // printf("row=%d: ", (int)row);
                 for (int col = 0; col < 97; col++) {
-                    float v = predict_output.data.f[(row * 97) + col];
+                    int v = predict_output.data.int8[(row * 97) + col];
                     if (v > hi_val) {
                         hi_val = v;
                         hi_ix = col;
@@ -410,7 +418,8 @@ int main (void)
                 }
             }
 
-            ei_printf("Box %d -> Output: %s (confidence range %f..%f)\n", bb_ix, output, lowest_confidence, highest_confidence);
+            ei_printf("Box %d -> Output: %s (confidence range %f..%f)\n", bb_ixs, output, lowest_confidence, highest_confidence);
+
         }
 
         status = model_predict_reset(ei_aligned_free);

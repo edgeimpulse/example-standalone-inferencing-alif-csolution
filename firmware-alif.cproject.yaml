@@ -21,7 +21,7 @@ project:
         - file: app/tflite-model/detect/tflite_learn_3_compiled.cpp
     - group: Predict
       files:
-        - file: app/tflite-model/predict/tflite_learn_12_compiled.cpp
+        - file: app/tflite-model/predict/tflite_learn_9_compiled.cpp
   linker:
     - script: link-scripts/gcc_M55_HE.ld
       for-compiler: GCC
