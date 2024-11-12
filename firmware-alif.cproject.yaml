@@ -22,6 +22,7 @@ project:
     - group: Predict
       files:
         - file: app/tflite-model/predict/tflite_learn_9_compiled.cpp
+        - file: app/tflite-model/predict/ei_ocr.cpp
   linker:
     - script: link-scripts/gcc_M55_HE.ld
       for-compiler: GCC

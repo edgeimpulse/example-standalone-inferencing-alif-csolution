@@ -33,9 +33,10 @@
 // #include "model-parameters/model_metadata.h"
 #include "board.h"
 
-#include "tflite-model/predict/tflite_learn_9_compiled.h"
+#include "tflite-model/predict/ei_ocr.h"
+// #include "tflite-model/predict/tflite_learn_9_compiled.h"
 #include "tflite-model/detect/tflite_learn_3_compiled.h"
-#include "bitmap_helper.h"
+// #include "bitmap_helper.h"
 
 #define ROWS 160
 #define COLS 160
@@ -316,124 +317,21 @@ int main (void)
 
         uint32_t time_detect_end = ei_read_timer_ms();
         
-
-        status = model_predict_init(ei_aligned_calloc);
-        if (status != kTfLiteOk) {
-            ei_printf("model_predict_init failed (%d)\n", status);
-            break;
-        }
-
-        static TfLiteTensor predict_input;
-        status = model_predict_input(0, &predict_input);
-        if (status != kTfLiteOk) {
-            ei_printf("model_predict_input failed (%d)\n", status);
-            break;
-        }
-
-        static TfLiteTensor predict_output;
-        status = model_predict_output(0, &predict_output);
-        if (status != kTfLiteOk) {
-            ei_printf("model_predict_output failed (%d)\n", status);
-            break;
-        }
+        EiOcr *ocr = new EiOcr(PREDICT_ROWS, PREDICT_COLS);
 
         int bb_ixs = 0;
 
         for (auto box : boxes) {
             int bb_ix = bb_ixs++;
-            char output[128] = { 0 };
-            int output_ix = 0;
 
-            int cutout_rows = box.row_end - box.row_start;
-            int cutout_cols = box.col_end - box.col_start;
-            float *cutout = (float*)ei_malloc(cutout_rows * cutout_cols * 4);
-            // printf("bb %d => cutout_rows = %d, cutout_cols = %d\n", bb_ix, cutout_rows, cutout_cols);
-            for (int row = 0; row < cutout_rows; row++) {
-                for (int col = 0; col < cutout_cols; col++) {
-                    cutout[(row * cutout_cols) + col] = raw_features[((row + box.row_start) * COLS) + (col + box.col_start)];
-                }
+
+            int32_t text_length = ocr->predict(raw_features, box.row_start, box.row_end, box.col_start, box.col_end);
+            if(text_length > 0){
+                ei_printf("Box %d length: %d -> Output: %s\n", bb_ix, text_length, ocr->get_output());
             }
-
-            static float resized_cutout[PREDICT_COLS * PREDICT_ROWS];
-
-            resize_image(cutout, resized_cutout, cutout_cols, cutout_rows, PREDICT_COLS, PREDICT_ROWS);
-
-            for (size_t ix = 0; ix < PREDICT_COLS * PREDICT_ROWS; ix++) {
-                float pixel = resized_cutout[ix];
-                float r = (float)((int)pixel >> 16 & 0xff) / 255.0f;
-                float g = (float)((int)pixel >> 8 & 0xff) / 255.0f;
-                float b = (float)((int)pixel & 0xff) / 255.0f;
-                features[(ix * 3) + 0] = b;
-                features[(ix * 3) + 1] = g;
-                features[(ix * 3) + 2] = r;
-            }
-
-
-            float py_zero_point = predict_input.params.zero_point;
-            float py_scale = predict_input.params.scale;
-
-            for (size_t ix = 0; ix < PREDICT_COLS * PREDICT_ROWS * 3; ix++){
-                float v = features[ix];
-                v = (v - 0.5) / 0.5;
-                int vq = (v / py_scale) + py_zero_point;
-                if (vq < -128)
-                {
-                    vq = -128;
-                }
-                if (vq > 127)
-                {
-                    vq = 127;
-                }
-                predict_input.data.int8[ix] = vq;
-            }
-
-            ei_free(cutout);
-
-            // invoke model
-            status = model_predict_invoke();
-            if (status != kTfLiteOk) {
-                ei_printf("model_predict_invoke failed (%d)\n", status);
-                break;
-            }
-
-            float highest_confidence = 0.0f;
-            float lowest_confidence = 1.0f;
-
-            for (size_t row = 0; row < 20; row++) {
-                int hi_val = -1000;
-                int hi_ix = -1;
-
-                // printf("row=%d: ", (int)row);
-                for (int col = 0; col < 97; col++) {
-                    int v = predict_output.data.int8[(row * 97) + col];
-                    if (v > hi_val) {
-                        hi_val = v;
-                        hi_ix = col;
-                    }
-                }
-                // printf("hi_val=%f, ix=%d\n", hi_val, hi_ix);
-                if (hi_ix != 0) {
-                    // printf("%c (%f)\n", dict[hi_ix - 1], hi_val);
-                    output[output_ix++] = dict[hi_ix - 1];
-                }
-
-                if (hi_val > highest_confidence) {
-                    highest_confidence = hi_val;
-                }
-                if (hi_val < lowest_confidence) {
-                    lowest_confidence = hi_val;
-                }
-            }
-
-            ei_printf("Box %d -> Output: %s (confidence range %f..%f)\n", bb_ixs, output, lowest_confidence, highest_confidence);
         }
 
-        status = model_predict_reset(ei_aligned_free);
-        if (status != kTfLiteOk) {
-            ei_printf("model_predict_reset failed (%d)\n", status);
-            break;
-        }
-
+        delete ocr;
         uint32_t time_predict_end = ei_read_timer_ms();
 
 
