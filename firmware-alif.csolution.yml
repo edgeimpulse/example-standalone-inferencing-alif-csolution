@@ -1,0 +1,87 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/tools/projmgr/2.6.0/tools/projmgr/schemas/csolution.schema.json
+solution:
+  created-for: cmsis-toolbox@2.6.0
+  cdefault:
+
+  target-types:
+    - type: HE
+      device: Alif Semiconductor::AE722F80F55D5LS:M55_HE
+      compiler: GCC
+      define:
+        - "CORE_M55_HE"
+        - "EI_CLASSIFIER_ALLOCATION_STATIC"
+        - EI_TENSOR_ARENA_LOCATION: ".tensor_arena_buf_sram"
+        - define BOARD_ALIF_DEVKIT_VARIANT: 5
+    - type: HP
+      device: Alif Semiconductor::AE722F80F55D5LS:M55_HP
+      compiler: GCC
+      define:
+        - "CORE_M55_HP"
+        - "EI_CLASSIFIER_ALLOCATION_STATIC"
+        - EI_TENSOR_ARENA_LOCATION: ".tensor_arena_buf_dtcm"
+        - define BOARD_ALIF_DEVKIT_VARIANT: 5
+    - type: HP_SRAM
+      device: Alif Semiconductor::AE722F80F55D5LS:M55_HP    
+      compiler: GCC  
+      define:
+        - "CORE_M55_HP"
+        - "EI_CLASSIFIER_ALLOCATION_STATIC"
+        - EI_TENSOR_ARENA_LOCATION: ".tensor_arena_buf_sram"
+        - define BOARD_ALIF_DEVKIT_VARIANT: 5
+    - type: HE_DEVKIT
+      device: Alif Semiconductor::AE722F80F55D5LS:M55_HE      
+      compiler: GCC
+      define:
+        - "CORE_M55_HE"
+        - "EI_CLASSIFIER_ALLOCATION_STATIC"
+        - EI_TENSOR_ARENA_LOCATION: ".tensor_arena_buf_sram"
+        - define BOARD_ALIF_DEVKIT_VARIANT: 4
+    - type: HP_DEVKIT
+      device: Alif Semiconductor::AE722F80F55D5LS:M55_HP      
+      compiler: GCC
+      define:
+        - "CORE_M55_HP"
+        - "EI_CLASSIFIER_ALLOCATION_STATIC"
+        - EI_TENSOR_ARENA_LOCATION: ".tensor_arena_buf_dtcm"
+        - define BOARD_ALIF_DEVKIT_VARIANT: 4
+    - type: HP_SRAM_DEVKIT
+      device: Alif Semiconductor::AE722F80F55D5LS:M55_HP
+      define:
+        - "CORE_M55_HP"
+        - "EI_CLASSIFIER_ALLOCATION_STATIC"
+        - EI_TENSOR_ARENA_LOCATION: ".tensor_arena_buf_sram"
+        - define BOARD_ALIF_DEVKIT_VARIANT: 4
+  define:
+    - UNICODE
+    - _UNICODE
+    #- _DEBUG
+
+# List different build types
+  build-types:
+    - type: Debug
+      optimize: debug
+      debug: on
+      define:
+        - _DEBUG
+
+    - type: Balanced
+      optimize: balanced
+      debug: off
+
+    - type: Size
+      optimize: size
+      debug: off
+
+    - type: Speed
+      optimize: speed
+      debug: off
+
+  packs:
+    - pack: AlifSemiconductor::Ensemble@1.3.2
+    - pack: ARM::CMSIS@6.0.0
+    - pack: ARM::CMSIS-DSP@1.15.0
+    - pack: ARM::CMSIS-NN@4.1.0    
+    - pack: Arm::ethos-u-core-driver@1.24.11
+
+  projects:
+    - project: firmware-alif.cproject.yml
