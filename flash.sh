@@ -2,20 +2,40 @@
 set -e
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
-if [ -z "$SETOOLS_ROOT" ]; then
-    echo "SETOOLS_ROOT is not set!"
-    exit 1
-fi
+POSITIONAL_ARGS=()
 
-TARGET=$1
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --target)
+            TARGET="$2"
+            shift # past argument
+            shift # past value
+            ;;
+        --config)
+            BUILD_CONFIG="$2"
+            shift # past argument
+            shift # past value
+            ;;
+        *)
+            POSITIONAL_ARGS+=("$1") # save positional arg
+            shift # past argument
+            ;;
+    esac
+done
 
+# default values
 if [ -z "$TARGET" ]; then
     TARGET="HP"
 fi
 
+if [ -z "$BUILD_CONFIG" ]; then
+    BUILD_CONFIG="Debug"
+fi
 
-if [ "$TARGET" == "HE" ] || [ "$TARGET" == "HP" ]; then
-    cp ./out/firmware-alif/${TARGET}/debug/firmware-alif-${TARGET}.bin $SETOOLS_ROOT/build/images/alif-img.bin
+echo "Flashing firmware for ${TARGET}"
+
+if [ "$TARGET" == "HE" ] || [ "$TARGET" == "HP" ] || [ "$TARGET" == "HP_SRAM" ] || [ "$TARGET" == "HE_DEVKIT" ] || [ "$TARGET" == "HP_DEVKIT" ] || [ "$TARGET" == "HP_SRAM_DEVKIT" ] || [ "$TARGET" == "E1C" ]; then
+    cp ./out/firmware-alif/${TARGET}/${BUILD_CONFIG}/firmware-alif-${TARGET}.bin $SETOOLS_ROOT/build/images/alif-img.bin
     cp ./.alif/m55-${TARGET}_cfg.json $SETOOLS_ROOT/alif-img.json
 
     cd $SETOOLS_ROOT

@@ -27,8 +27,8 @@
  * limitations under the License.
  */
 
-__STACK_SIZE    = 0x00008000;
-__HEAP_SIZE     = 0x00010000;
+__STACK_SIZE    = 0x00004000;
+__HEAP_SIZE     = 0x000A0000;
 __ROM_BASE      = 0x80000000;
 __ROM_SIZE      = 0x0057F000;
 
@@ -49,18 +49,16 @@ SECTIONS
   {
     KEEP(*(.vectors))
 
-    *startup_M55_*.c.obj(.text .rodata*)
-    *system_M55.c.obj(.text .rodata*)
-    *mpu_M55.c.obj(.text .rodata*)
-    *system_utils.c.obj(.text .rodata*)
+    *startup_*(.text .rodata*)
+    *system_*(.text .rodata*)
+    *system_utils*(.text .rodata*)
     *pm*(.text .rodata*)
     *tgu_*(.text .rodata*)
+    *mpu_*(.text .rodata*)
+    *tcm_partition*(.text .rodata*)
 
-    *peripheral.c.obj(.text .rodata*)
-    *ei_at_handlers.cpp.obj(.text .rodata*)
-    *ei_device_alif_e7.cpp.obj(.text .rodata*)
-
-    *lv_*.c.obj(.text .rodata*)
+    *peripheral.c.obj(.text* .rodata*)
+    *board_init.c.obj(.text* .rodata*)
 
     *libg.a:*printf*(.text* .rodata*)
     *libstdc++.a:cp-demangle.o(.text* .rodata*)
@@ -68,6 +66,7 @@ SECTIONS
     *flatbuffer*.obj(.text .rodata*)
 
     *(startup_ro_data)
+    . = ALIGN(16);
   } > MRAM
 
   .copy.table : ALIGN(4)
@@ -76,10 +75,12 @@ SECTIONS
     LONG ( LOADADDR(.data.at_dtcm) )
     LONG ( ADDR(.data.at_dtcm) )
     LONG ( SIZEOF(.data.at_dtcm)/4 )
+
     LONG ( LOADADDR(.code.at_itcm) )
     LONG ( ADDR(.code.at_itcm) )
     LONG ( SIZEOF(.code.at_itcm)/4 )
     __copy_table_end__ = .;
+    . = ALIGN(16);
   } > MRAM
 
   .zero.table : ALIGN(4)
@@ -92,6 +93,7 @@ SECTIONS
     LONG (ADDR(.bss.at_sram1))
     LONG (SIZEOF(.bss.at_sram1)/4)
     __zero_table_end__ = .;
+    . = ALIGN(16);
   } > MRAM
 
   .vectors.itcm (NOLOAD) : ALIGN(2048)
@@ -101,16 +103,16 @@ SECTIONS
 
   .code.at_itcm : ALIGN(8)
   {
-    *(.text*)    
+    *(.text*)
+    . = ALIGN(16);
   } > ITCM AT > MRAM
 
   .data.at_dtcm : ALIGN(8)
   {
-    /* DTCM has all read-write data, including NPU activation buffer and audio processing buffers */
     *(vtable)
     *(.data)
     *(.data*)
-    *arm_common_tables.c.obj(.data* .rodata*)
+    *arm_common_tables*(.data* .rodata*)
 
     KEEP(*(.jcr*))
 
@@ -120,25 +122,19 @@ SECTIONS
     __exidx_start = .;
     *(.ARM.exidx* .gnu.linkonce.armexidx.*)
     __exidx_end = .;
-
-  } > DTCM AT> MRAM
+    . = ALIGN(16);
+  } > DTCM AT > MRAM
 
   .bss.at_sram0 (NOLOAD) : ALIGN(8)
-  {
-    * (.bss.lcd_crop_and_interpolate_buf)  /* LCD crop and intrepolate image processing buffer. */
-    * (.bss.lcd_frame_buf)                 /* LCD frame Buffer. */
-    * (.tensor_arena_buf)
+  {    
+    * (.bss.at_sram0*)
+    * (.tensor_arena_buf_sram)
   } > SRAM0
 
   .bss.at_sram1 (NOLOAD) : ALIGN(8)
   {
-    * (.bss.camera_frame_buf)              /* Camer Frame Buffer */
-    * (.bss.camera_frame_bayer_to_rgb_buf) /* (Optional) Camera Frame Buffer for Bayer to RGB Conversion. */
+    * (.bss.at_sram1*)
   } > SRAM1
-
-  .bss.itcm (NOLOAD) : ALIGN(8)
-  {
-  } > ITCM
 
   .bss (NOLOAD) : ALIGN(8)
   {
@@ -146,7 +142,7 @@ SECTIONS
     *(.bss)
     *(.bss.*)
     *(COMMON)
-
+    * (.tensor_arena_buf_dtcm)
     . = ALIGN(8);
     __bss_end__ = .;
   } > DTCM
@@ -158,6 +154,7 @@ SECTIONS
     . = . + __HEAP_SIZE;
     . = ALIGN(8);
     __HeapLimit = .;
+    PROVIDE(heap_limit = .);
   } > DTCM
 
   .stack (ORIGIN(DTCM) + LENGTH(DTCM) - __STACK_SIZE) (NOLOAD) : ALIGN(8)
@@ -212,8 +209,14 @@ SECTIONS
     *(.rodata*)
 
     KEEP(*(.eh_frame*))
+    . = ALIGN(16);
   } > MRAM
 
   /* Check if data + heap + stack exceeds RAM limit */
   ASSERT(__StackLimit >= __HeapLimit, "region RAM overflowed with stack")
+
+  .resources : ALIGN(8)
+  {
+    *(.resources*)
+  } > SRAM1 AT > MRAM
 }

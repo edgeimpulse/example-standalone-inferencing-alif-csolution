@@ -1,6 +1,10 @@
 out/
-RTE/
+
 tmp/
 *.yml
 *.cprj
 .clangd
+
+!cdefault.yml
+!firmware-alif.cproject.yml
+!firmware-alif.csolution.yml

@@ -37,33 +37,33 @@
             "type": "shell",
             "windows": {
                 "command": [
-                "cbuild cproject+${command:cpptools.activeConfigName}.cprj -C;",
-                "rm -Recurse -Force ./out;",
-                "rm -Recurse -Force ./RTE;",
-                "rm -Recurse -Force ./tmp;",
-                "rm -Recurse -Force *.yml;",
-                "rm -Recurse -Force *.cprj;",         
-                ],
+                    "cbuild cproject+${command:cpptools.activeConfigName}.cprj -C;",
+                    "rm -Recurse -Force ./out;",
+                    "rm -Recurse -Force ./RTE;",
+                    "rm -Recurse -Force ./tmp;",
+                    "rm -Recurse -Force *.yml;",
+                    "rm -Recurse -Force *.cprj;"
+                ]
             },
             "linux": {
                 "command": [
-                "cbuild cproject+${command:cpptools.activeConfigName}.cprj -C;",
-                "rm -rf ./out;",
-                "rm -rf ./RTE;",
-                "rm -rf ./tmp;",
-                "rm -rf *.yml;",
-                "rm -rf *.cprj;",         
-                ],
+                    "cbuild cproject+${command:cpptools.activeConfigName}.cprj -C;",
+                    "rm -rf ./out;",
+                    "rm -rf ./RTE;",
+                    "rm -rf ./tmp;",
+                    "rm -rf *.yml;",
+                    "rm -rf *.cprj;"
+                ]
             },
             "osx": {
                 "command": [
-                "cbuild cproject+${command:cpptools.activeConfigName}.cprj -C;",
-                "rm -rf ./out;",
-                "rm -rf ./RTE;",
-                "rm -rf ./tmp;",
-                "rm -rf *.yml;",
-                "rm -rf *.cprj;",         
-                ],
+                    "cbuild cproject+${command:cpptools.activeConfigName}.cprj -C;",
+                    "rm -rf ./out;",
+                    "rm -rf ./RTE;",
+                    "rm -rf ./tmp;",
+                    "rm -rf *.yml;",
+                    "rm -rf *.cprj;"
+                ]
             },
             "problemMatcher": []
         },
@@ -224,7 +224,7 @@
                     "pushd $SETOOLS_ROOT;",
                     "./app-gen-toc -f ./build/config/app-cpu-stubs.json;",
                     "./app-write-mram;",
-                    "popd"                    
+                    "popd"
                 ]
             },
             "osx": {
@@ -265,6 +265,109 @@
                 ]
             },
             "problemMatcher": []
+        },
+        {
+            "label": "CMSIS Erase",
+            "type": "shell",
+            "command": "pyocd",
+            "options": {
+                "cwd": "${workspaceFolder}/",
+                "shell": {
+                    "executable": "/bin/bash",
+                    "args": [
+                        "-c"
+                    ]
+                }
+            },
+            "args": [
+                "erase",
+                "--probe",
+                "cmsisdap:",
+                "--chip",
+                "--cbuild-run",
+                "${command:cmsis-csolution.getCbuildRunFile}"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "CMSIS Load",
+            "type": "shell",
+            "command": "pyocd",
+            "options": {
+                "cwd": "${workspaceFolder}/",
+                "shell": {
+                    "executable": "/bin/bash",
+                    "args": [
+                        "-c"
+                    ]
+                }
+            },
+            "args": [
+                "load",
+                "--probe",
+                "cmsisdap:",
+                "--cbuild-run",
+                "${command:cmsis-csolution.getCbuildRunFile}"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "CMSIS Run",
+            "type": "shell",
+            "command": "pyocd",
+            "options": {
+                "cwd": "${workspaceFolder}/",
+                "shell": {
+                    "executable": "/bin/bash",
+                    "args": [
+                        "-c"
+                    ]
+                }
+            },
+            "args": [
+                "gdbserver",
+                "--probe",
+                "cmsisdap:",
+                "--connect",
+                "attach",
+                "--persist",
+                "--reset-run",
+                "--cbuild-run",
+                "${command:cmsis-csolution.getCbuildRunFile}",
+                "--quiet",
+                "--log",
+                "*.cbuild_run,*server=info"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "CMSIS Load+Run",
+            "dependsOn": [
+                "CMSIS Load",
+                "CMSIS Run"
+            ],
+            "dependsOrder": "sequence",
+            "problemMatcher": []
+        },
+        {
+            "label": "CMSIS TargetInfo",
+            "type": "shell",
+            "command": "pyocd",
+            "options": {
+                "cwd": "${workspaceFolder}/",
+                "shell": {
+                    "executable": "/bin/bash",
+                    "args": [
+                        "-c"
+                    ]
+                }
+            },
+            "args": [
+                "list",
+                "--cbuild-run",
+                "${command:cmsis-csolution.getCbuildRunFile}"
+            ],
+            "problemMatcher": []
         }
-    ],
+    ]
 }

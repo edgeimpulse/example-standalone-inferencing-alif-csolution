@@ -29,4 +29,9 @@
             }
         }
     ],
+    "debug.hideSlowPreLaunchWarning": true,
+    "debug.showInStatusBar": "never",
+    "clangd.arguments": [
+        "--compile-commands-dir=/Users/francescovarani/work/edge_impulse/alif/example-standalone-inferencing-alif-csolution/out/firmware-alif/HE/Debug"
+    ],
 }

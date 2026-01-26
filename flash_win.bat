@@ -1,33 +1,50 @@
-@ECHO OFF
-SETLOCAL ENABLEDELAYEDEXPANSION
-setlocal
-REM go to the folder where this bat script is located
-cd /d %~dp0
+#!/bin/bash
+set -e
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
-if not defined SETOOLS_ROOT goto NOSETTOOLS
+POSITIONAL_ARGS=()
 
-set TARGET=%1
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --target)
+            TARGET="$2"
+            shift # past argument
+            shift # past value
+            ;;
+        --config)
+            BUILD_CONFIG="$2"
+            shift # past argument
+            shift # past value
+            ;;
+        *)
+            POSITIONAL_ARGS+=("$1") # save positional arg
+            shift # past argument
+            ;;
+    esac
+done
 
-if not defined TARGET SET TARGET="HP"
+# default values
+if [ -z "$TARGET" ]; then
+    TARGET="HP"
+fi
 
-if %TARGET% NEQ "HP" and %TARGET% NEQ "HE" goto INVALIDTARGET
+if [ -z "$BUILD_CONFIG" ]; then
+    BUILD_CONFIG="Debug"
+fi
 
-copy out\firmware-alif\%TARGET%\debug\firmware-alif-%TARGET%.bin %SETOOLS_ROOT%\build\images\alif-img.bin
-copy .alif\m55-%TARGET%_cfg.json %SETOOLS_ROOT%\alif-img.json
-cd %SETOOLS_ROOT%
-app-gen-toc.exe -f build\imagesalif-img.json
-app-write-mram.exe -p
-del build\images\alif-img.bin
-del build\images\alif-img.json
+echo "Flashing firmware for ${TARGET}"
 
-exit
+if [ "$TARGET" == "HE" ] || [ "$TARGET" == "HP" ] || [ "$TARGET" == "HP_SRAM" ] || [ "$TARGET" == "HE_DEVKIT" ] || [ "$TARGET" == "HP_DEVKIT" ] || [ "$TARGET" == "HP_SRAM_DEVKIT" ] || [ "$TARGET" == "E1C" ]; then
+    cp ./out/firmware-alif/${TARGET}/${BUILD_CONFIG}/firmware-alif-${TARGET}.bin $SETOOLS_ROOT/build/images/alif-img.bin
+    cp ./.alif/m55-${TARGET}_cfg.json $SETOOLS_ROOT/alif-img.json
 
-:NOSETTOOLS
+    cd $SETOOLS_ROOT
+    ./app-gen-toc -f alif-img.json
+    ./app-write-mram -p
 
-echo SETOOLS_ROOT not set!
-exit \b 1
-
-:INVALIDTARGET
-
-echo %TARGET% is an invalid target!
-exit \b 1
+    rm ./build/images/alif-img.bin
+    rm ./alif-img.json;
+else
+    echo "Invalid target: $TARGET"
+    exit 1
+fi

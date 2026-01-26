@@ -1,3 +1,0 @@
-[submodule "libs/board"]
-	path = libs/board
-	url = https://github.com/alifsemi/alif_boardlib.git
